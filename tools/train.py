@@ -68,7 +68,9 @@ def main(args):
         pl.seed_everything(args.seed)
     
     logger.info("Creating model...")
-    task = TrainingTask(cfg, evaluator)
+    task = TrainingTask(cfg, None)
+    task.save_model_state('wt_320.pth', logger)
+    os._exit(1)
 
     if "load_model" in cfg.schedule:
         ckpt = torch.load(cfg.schedule.load_model)
@@ -124,8 +126,6 @@ def main(args):
     )
 
     # trainer.fit(task, train_dataloader, val_dataloader, ckpt_path=model_resume_path)
-    import ipdb; ipdb.set_trace()
-    os._exit(1)
     logger.info("Setting up data...")
     train_dataset = build_dataset(cfg.data.train, "train")
     val_dataset = build_dataset(cfg.data.val, "test")

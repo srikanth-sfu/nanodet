@@ -53,7 +53,6 @@ class TrainingTask(LightningModule):
                 cfg.model.weight_averager, device=self.device
             )
             self.avg_model = copy.deepcopy(self.model)
-
     def _preprocess_batch_input(self, batch):
         batch_imgs = batch["img"]
         if isinstance(batch_imgs, list):
@@ -296,8 +295,12 @@ class TrainingTask(LightningModule):
         self.logger.info(string)
 
     @rank_zero_only
-    def save_model_state(self, path):
-        self.logger.info("Saving model to {}".format(path))
+    def save_model_state(self, path, logger=None):
+        if logger is not None:
+            logger.info("Saving model to {}".format(path))
+        else:
+            self.logger.info("Saving model to {}".format(path))
+
         state_dict = (
             self.weight_averager.state_dict()
             if self.weight_averager
