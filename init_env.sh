@@ -5,4 +5,5 @@ conda install pytorch torchvision cudatoolkit=11.1 -c pytorch pytorch-lightning=
 conda install torchmetrics tqdm
 cd $SLURM_TMPDIR
 git clone git@github.com:srikanth-sfu/nanodet.git
+
 # opencv-python
