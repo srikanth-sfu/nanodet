@@ -300,13 +300,13 @@ class TrainingTask(LightningModule):
             logger.info("Saving model to {}".format(path))
         else:
             self.logger.info("Saving model to {}".format(path))
-
         state_dict = (
             self.weight_averager.state_dict()
-            if self.weight_averager
+            if self.weight_averager.state_dict()
             else self.model.state_dict()
         )
         torch.save({"state_dict": state_dict}, path)
+        torch.save(self.model, path.replace('.pth', '.ckpt'))
 
     # ------------Hooks-----------------
     def on_fit_start(self) -> None:
