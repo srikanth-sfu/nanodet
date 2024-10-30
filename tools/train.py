@@ -20,7 +20,6 @@ import pytorch_lightning as pl
 import torch
 from pytorch_lightning.callbacks import TQDMProgressBar
 
-from nanodet.data.collate import naive_collate
 from nanodet.data.dataset import build_dataset
 from nanodet.evaluator import build_evaluator
 from nanodet.trainer.task import TrainingTask
@@ -33,6 +32,7 @@ from nanodet.util import (
     load_model_weight,
     mkdir,
 )
+from nanodet.data.collate import naive_collate
 
 
 def parse_args():
@@ -66,32 +66,7 @@ def main(args):
     if args.seed is not None:
         logger.info("Set random seed to {}".format(args.seed))
         pl.seed_everything(args.seed)
-
-    logger.info("Setting up data...")
-    train_dataset = build_dataset(cfg.data.train, "train")
-    val_dataset = build_dataset(cfg.data.val, "test")
-
-    evaluator = build_evaluator(cfg.evaluator, val_dataset)
-
-    train_dataloader = torch.utils.data.DataLoader(
-        train_dataset,
-        batch_size=cfg.device.batchsize_per_gpu,
-        shuffle=True,
-        num_workers=cfg.device.workers_per_gpu,
-        pin_memory=True,
-        collate_fn=naive_collate,
-        drop_last=True,
-    )
-    val_dataloader = torch.utils.data.DataLoader(
-        val_dataset,
-        batch_size=cfg.device.batchsize_per_gpu,
-        shuffle=False,
-        num_workers=cfg.device.workers_per_gpu,
-        pin_memory=True,
-        collate_fn=naive_collate,
-        drop_last=False,
-    )
-
+    
     logger.info("Creating model...")
     task = TrainingTask(cfg, evaluator)
 
@@ -130,6 +105,7 @@ def main(args):
     if devices and len(devices) > 1:
         strategy = "ddp"
         env_utils.set_multi_processing(distributed=True)
+    
 
     trainer = pl.Trainer(
         default_root_dir=cfg.save_dir,
@@ -147,7 +123,33 @@ def main(args):
         precision=precision,
     )
 
-    trainer.fit(task, train_dataloader, val_dataloader, ckpt_path=model_resume_path)
+    # trainer.fit(task, train_dataloader, val_dataloader, ckpt_path=model_resume_path)
+    import ipdb; ipdb.set_trace()
+    os._exit(1)
+    logger.info("Setting up data...")
+    train_dataset = build_dataset(cfg.data.train, "train")
+    val_dataset = build_dataset(cfg.data.val, "test")
+
+    evaluator = build_evaluator(cfg.evaluator, val_dataset)
+
+    train_dataloader = torch.utils.data.DataLoader(
+        train_dataset,
+        batch_size=cfg.device.batchsize_per_gpu,
+        shuffle=True,
+        num_workers=cfg.device.workers_per_gpu,
+        pin_memory=True,
+        collate_fn=naive_collate,
+        drop_last=True,
+    )
+    val_dataloader = torch.utils.data.DataLoader(
+        val_dataset,
+        batch_size=cfg.device.batchsize_per_gpu,
+        shuffle=False,
+        num_workers=cfg.device.workers_per_gpu,
+        pin_memory=True,
+        collate_fn=naive_collate,
+        drop_last=False,
+    )
 
 
 if __name__ == "__main__":
