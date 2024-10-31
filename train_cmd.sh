@@ -1,1 +1,1 @@
-python tools/train.py config/nanodet-plus-m_320.yml
+python tools/train.py config/legacy_v0.x_configs/nanodet-m-0.5x.yml
