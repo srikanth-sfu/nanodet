@@ -302,7 +302,7 @@ class TrainingTask(LightningModule):
             self.logger.info("Saving model to {}".format(path))
         state_dict = (
             self.weight_averager.state_dict()
-            if self.weight_averager.state_dict()
+            if (self.weight_averager and self.weight_averager.state_dict())
             else self.model.state_dict()
         )
         torch.save({"state_dict": state_dict}, path)
