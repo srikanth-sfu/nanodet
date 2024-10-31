@@ -1,6 +1,7 @@
 conda create -n nanodet python=3.8 -y
 conda activate nanodet
 conda install kiwisolver opencv -y
+conda install tensorflow
 pip install Cython matplotlib numpy onnx onnx2tf onnx-simplifier pyyaml imagesize pycocotools tabulate tensorboard termcolor --no-index
 pip install --upgrade pip==23.0.1
 unset PIP_CACHE_DIR
