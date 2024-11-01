@@ -9,6 +9,12 @@ pip install omegaconf==2.0.2
 conda install pytorch=1.13.1 torchvision cudatoolkit=11.1 tensorflow=2.11.0 -c conda-forge -y 
 conda install pytorch-lightning=1.9.5 torchmetrics tqdm -y
 python setup.py develop
+wget https://developer.download.nvidia.com/compute/redist/onnx-graphsurgeon/onnx_graphsurgeon-0.3.9-py2.py3-none-any.whl
+pip install onnx_graphsurgeon-0.3.9-py2.py3-none-any.whl
+pip install onnx2tf==1.11.0 sng4onnx
+source train_cmd.sh
+source convert_cmd.sh
+onnx2tf -i nanodet.onnx
 mkdir ckpt && cd ckpt
 # nanodet_m.ckpt
 #wget https://drive.google.com/file/d/1ZkYucuLusJrCb_i63Lid0kYyyLvEiGN3/view?usp=sharing
