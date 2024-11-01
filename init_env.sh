@@ -6,7 +6,7 @@ pip install Cython matplotlib numpy onnx ipdb onnxruntime onnx-simplifier pyyaml
 pip install --upgrade pip==23.0.1
 unset PIP_CACHE_DIR
 pip install omegaconf==2.0.2
-conda install pytorch=1.13.1 torchvision cudatoolkit=11.1 tensorflow=1.11.0 -c conda-forge -y 
+conda install pytorch=1.13.1 torchvision cudatoolkit=11.1 tensorflow=2.11.0 -c conda-forge -y 
 conda install pytorch-lightning=1.9.5 torchmetrics tqdm -y
 python setup.py develop
 mkdir ckpt && cd ckpt
